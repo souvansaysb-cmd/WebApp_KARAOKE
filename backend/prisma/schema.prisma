@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ========== DATABASE ==========
+// Uses PostgreSQL by default. For local dev without Docker,
+// set DATABASE_URL="file:./dev.db" in your .env and the provider
+// will switch automatically to SQLite.
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// For local development with SQLite, set:
+//   DATABASE_URL="file:./dev.db"
+// And switch the provider above from "postgresql" to "sqlite".
+// This is a Prisma limitation — provider cannot be set dynamically.
+
+model User {
+  id                String   @id @default(uuid())
+  email             String   @unique
+  username          String?  @unique
+  firebaseId        String   @unique
+  role              String   @default("USER")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  queueItems        QueueItem[] @relation("UserQueueItems")
+  comments          Comment[] @relation("UserComments")
+  votes             Vote[] @relation("UserVotes")
+  chatMessages      ChatMessage[] @relation("UserChatMessages")
+
+  @@map("users")
+}
+
+model QueueItem {
+  id           String   @id @default(uuid())
+  videoId      String
+  title        String
+  thumbnail    String
+  userId       String
+  user         User     @relation("UserQueueItems", fields: [userId], references: [id], onDelete: Cascade)
+  position     Int      @default(0)
+  votes        Int      @default(0)
+  status       String   @default("QUEUED") // QUEUED, PLAYING, COMPLETED, BLOCKED
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  comments     Comment[]
+  votes_rel    Vote[] @relation("votes_rel")
+
+  @@map("queue_items")
+}
+
+model Comment {
+  id           String   @id @default(uuid())
+  content      String
+  userId       String
+  user         User     @relation("UserComments", fields: [userId], references: [id], onDelete: Cascade)
+  queueItemId  String
+  queueItem    QueueItem @relation(fields: [queueItemId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("comments")
+}
+
+model Vote {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation("UserVotes", fields: [userId], references: [id], onDelete: Cascade)
+  queueItemId  String
+  queueItem    QueueItem @relation("votes_rel", fields: [queueItemId], references: [id], onDelete: Cascade)
+  value        Int      @default(1) // 1 for upvote, -1 for downvote
+  createdAt    DateTime @default(now())
+
+  @@unique([userId, queueItemId])
+  @@map("votes")
+}
+
+model ChatMessage {
+  id           String   @id @default(uuid())
+  content      String
+  userId       String
+  user         User     @relation("UserChatMessages", fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+
+  @@map("chat_messages")
+}

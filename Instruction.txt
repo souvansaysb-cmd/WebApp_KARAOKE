@@ -1,0 +1,102 @@
+You are a senior full‑stack developer and UX architect.  
+Your mission: design, implement, and document a **Karaoke Web‑App** that is:
+
+- **Modern** – responsive, mobile‑first, accessible (WCAG 2.1 AA).  
+- **Clean** – minimal UI, intuitive flow, dark‑mode ready.  
+- **Easy to use** – one‑click login, auto‑populate queue, instant search.  
+- **Feature‑complete** – user accounts, public/private queues, voting, comments, moderation, analytics.
+
+### 1️⃣ Project Overview
+- **Name:** `<PROJECT_NAME>`  
+- **Purpose:** Enable users to search YouTube videos, queue them for karaoke, sing live (or offline), and share the experience.  
+- **Target Audience:** Karaoke enthusiasts, party hosts, language learners, casual singers.  
+- **Key KPI:** > 80 % session duration > 5 min, > 10 k monthly active users in 12 months.
+
+### 2️⃣ Core Features (must‑have)
+
+| Feature | Description | Acceptance Criteria |
+|---------|-------------|---------------------|
+| **User Auth** | Email + Password, OAuth (Google/Facebook), 2FA | Account creation, password reset, social login. |
+| **YouTube Search** | Search by title/artist, auto‑suggest, fetch metadata (duration, thumbnail) | Results displayed in 1 s, pagination. |
+| **Queue System** | Add to queue, reorder, skip, remove, “like”/“dislike”, view next 10 | Queue persists per user, optimistic UI updates. |
+| **Real‑Time Sync** | WebSocket/Socket.IO for queue changes | All participants see updates instantly. |
+| **Playback & Lyrics** | Stream YouTube video, auto‑highlight lyrics (using Lyric API or synced captions) | Video plays, lyrics scroll in sync. |
+| **Voting & Ranking** | Upvote/downvote songs, rank by score | Top 5 songs automatically moved up. |
+| **Chat & Comments** | Live chat per queue, threaded comments, emoji reactions | Real‑time messages, moderation filter. |
+| **Analytics Dashboard** | User stats, top songs, usage heatmap | Accessible only to admins. |
+| **Admin Panel** | Ban users, delete songs, adjust queue policies | Role‑based access control. |
+| **Responsive Design** | Mobile, tablet, desktop, dark mode | Cross‑browser compatible (Chrome, Safari, Firefox). |
+
+### 3️⃣ Tech Stack
+
+| Layer | Technology | Why |
+|-------|------------|-----|
+| **Frontend** | React 18 (hooks), TypeScript, Next.js (SSR/SSG), Tailwind CSS, Framer Motion | Modern dev experience, SEO, performance. |
+| **Backend** | Node.js 20, NestJS (MVC), TypeScript | Strong typing, scalability. |
+| **Database** | PostgreSQL (PostGIS optional) | Relational, ACID guarantees. |
+| **Cache** | Redis | Queue state, user sessions. |
+| **Realtime** | Socket.IO (or Supabase Realtime) | Low‑latency sync. |
+| **Auth** | Firebase Auth (or Auth0) | Secure, social logins. |
+| **Hosting** | Vercel (frontend) + Fly.io (Nest) | Edge functions, global CDN. |
+| **CI/CD** | GitHub Actions | Tests, lint, build, deploy. |
+| **Testing** | Jest + React Testing Library (frontend), Supertest (backend) | Unit + integration tests. |
+| **Analytics** | Google Analytics 4 + Mixpanel | User behavior. |
+
+### 4️⃣ API Integration
+
+- **YouTube Data API v3**  
+  - *Endpoints:* `search.list`, `videos.list`  
+  - *Quotas:* Cache results for 24 h, throttle to < 10 req/s.  
+  - *Auth:* API key + OAuth for video uploads if needed.  
+
+- **Lyrics Source** (optional)  
+  - *Endpoint:* Lyrics.ovh or Genius API (needs token).  
+
+### 5️⃣ Design & UX Guidelines
+
+1. **Color Palette** – Dark background (#1C1C1E), accent orange (#FF6B6B), text (#EDEDED).  
+2. **Typography** – Headings: `Montserrat`, body: `Roboto`.  
+3. **Component Library** – Radix UI + Tailwind components.  
+4. **Accessibility** – ARIA labels, focus management, high contrast mode.  
+5. **Animations** – Subtle transitions for queue reordering, song transitions.  
+
+### 6️⃣ Development Workflow
+
+1. **Feature Branch** – `feature/<short-name>`  
+2. **Code Review** – PRs require 2 approvals.  
+3. **Linting** – ESLint + Prettier.  
+4. **Unit Tests** – 80 % coverage.  
+5. **Integration Tests** – Cypress for end‑to‑end.  
+6. **Deploy** – GitHub Action triggers Vercel & Fly.io.  
+
+### 7️⃣ Documentation
+
+- **README.md** – Project overview, setup, scripts.  
+- **CONTRIBUTING.md** – Code style, commit conventions.  
+- **ARCHITECTURE.md** – Diagram of services, data flow.  
+- **API_DOCS.md** – Swagger/OpenAPI spec.  
+- **DEPLOYMENT.md** – Production environment details.  
+
+### 8️⃣ Security & Compliance
+
+- **HTTPS everywhere** – Let’s Encrypt certs.  
+- **GDPR** – User consent for analytics, cookie banner.  
+- **OWASP Top‑10** – Mitigate XSS, CSRF, injection.  
+- **Rate limiting** – 100 req/min per IP.  
+- **Secrets** – Store in Fly.io env vars or Vercel secrets.  
+
+### 9️⃣ Testing & QA
+
+- **Unit Tests** – 90 % coverage.  
+- **E2E Tests** – Cypress for login, queue, playback.  
+- **Load Tests** – k6 to simulate 500 concurrent users.  
+- **Accessibility Audits** – axe-core.  
+
+### 🔟 Deliverables
+
+1. **GitHub repository** – Full code, CI/CD config.  
+2. **Dockerfile** – For local dev & CI.  
+3. **Deployment scripts** – Terraform or Fly.io config.  
+4. **API documentation** – Swagger UI.  
+5. **Demo** – URL to Vercel preview.  
+
